@@ -1,0 +1,30 @@
+{% extends 'shared/layout.html' %}
+{% block body %}
+<header class="jumbotron">
+    <div class="container">
+        <h1>首頁</h1>
+    </div>
+</header>
+<section>
+    <div class="container">
+        <h2>產品列表</h2>
+        <div class="row">
+            {% for product in product_list %}
+            <div class="col-md-4">
+                <div class="card mb-3 shadow-sm">
+                    <img class="bd-placeholder-img card-img-top" width="100%" height="225" src="{{ product.img_url }}"
+                        alt="" aria-label="Placeholder: Thumbnail">
+                    <div class="card-body">
+                        <h4 class="card-title">{{ product.title }}</h4>
+                        <p class="card-text">${{ product.price }}</p>
+                        <!-- 將會產生/product/文件的ID/show: 想取得單一份文件id -->
+                        <a href="/product/{{ product.id }}/show" class="btn btn-sm btn-info">詳情</a>
+                        <a href="/product/{{ product.id }}/edit" class="btn btn-sm btn-secondary">編輯</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

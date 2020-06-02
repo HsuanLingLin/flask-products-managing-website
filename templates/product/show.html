@@ -1,0 +1,67 @@
+{% extends 'shared/layout.html' %}
+{% block body %}
+<!-- TODO: 顯示商品詳細資料 -->
+<img width="100%" src="{{ product.img_url }}" alt="">
+<div class="container">
+    <h1>{{ product.title }}</h1>
+    <h3>$ {{ product.price }} NTD</h3>
+    <p>{{ product.description}}</p>
+    <div class="card mt-3">
+        <div class="card-header">
+            新增留言
+        </div>
+        {% if auth_user.is_login: %}
+        <!-- 用POST方法送出 -->
+        <form class="card-body" method="POST">
+            <!-- 一定要寫，確保沒有亂攻擊你的網站 -->
+            {{ create_comment_form.hidden_tag() }}
+            <!-- 加入form-control 讓他變比較好看 -->
+            <div class="form-group">
+                <!-- 直接在框框填登入者的email，readonly設為True是只能唯讀 -->
+                {{ create_comment_form.email.label }}
+                {{ create_comment_form.email(class='form-control', type='email', value=auth_user.user.email, readonly=True) }}
+            </div>
+            <div class="form-group">
+                {{ create_comment_form.content.label }}
+                {{ create_comment_form.content(class='form-control') }}
+            </div>
+            <div class="form-group">
+                {{ create_comment_form.submit(class='btn btn-primary') }}
+            </div>
+        </form>
+        {% else %}
+        <div class="card-body">
+            只有登入後才可留言，點此
+            <!-- 如何叫出彈出視窗 modal-->
+            <!-- 要給#id -->
+            <a href="#loginModal" data-toggle="modal">登入</a>或
+            <a href="#signUpModal" data-toggle="modal">註冊</a>
+        </div>
+        {% endif %}
+    </div>
+    {% for comment in comment_list %}
+    <div class="card mt-3">
+        <div class="card-header">
+            {{ comment.email }}
+        </div>
+        <div class="card-body">
+            <p>{{ comment.content }}</p>
+            {% if comment.email == auth_user.user.email: %}
+            <button data-target="#form{{ comment.id }}" data-toggle="collapse" class="btn btn-secondary">編輯留言</button>
+            <form id="form{{ comment.id }}" class="collapse" method="POST">
+                {{ comment.form.hidden_tag() }}
+                <div class="form-group">
+                    {{ comment.form.content.label }}
+                    {{ comment.form.content(class='form-control') }}
+                </div>
+                <div class="form-group">
+                    {{ comment.form.submit(class='btn btn-warning') }}
+                </div>
+            </form>
+            {% endif %}
+        </div>
+
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'shared/layout.html' %}
+{% block body %}
+<header class="jumbotron">
+    <div class="container">
+        <h1>建立商品</h1>
+    </div>
+</header>
+<section>
+    <div class="container py-5">
+        <h2>填寫下方的表單建立商品</h2>
+        <!-- card -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h4 class="m-0">建立商品</h4>
+            </div>
+            <div class="card-body">
+                <!-- TODO: 
+                    顯示表單 
+                    並使用Bootstrap 4 表單元件
+                    https://getbootstrap.com/docs/4.4/components/forms/
+                -->
+                <!-- 取得伺服器的錯誤訊息 -->
+                {% for key in create_product_form.errors %}
+                <div class="alert alert-danger alert-primary alert-dismissible fade show" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    {% set errors = create_product_form.errors[key] %}
+                    {% for err in errors %}
+                    {{ err }}
+                    {% endfor %}
+                </div>
+                {% endfor %}
+                <form method="POST">
+                    <!-- form若沒有csrf_token是無法傳遞資料給後端(app.py) -->
+                    {{ create_product_form.hidden_tag() }}
+                    <!-- 在表單的元素上下加上一點間距 -->
+                    <div class="form-group">
+                        {{ create_product_form.title.label }}
+                        {{ create_product_form.title(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        <!-- price 如果不是輸入數字 就會不能觸發validate_on_submit -->
+                        {{ create_product_form.price.label }}
+                        {{ create_product_form.price(
+                            class="form-control"
+                            , type='number'
+                        ) }}
+                    </div>
+                    <div class="form-group">
+                        {{ create_product_form.img_url.label }}
+                        <!-- img_url必須是網址, 資料庫不能存圖片 只能存在圖片資料夾image本地端或是http網址 -->
+                        {% set default_img_url = 'https://picsum.photos/id/1025/600/400.jpg' %}
+                        {{ create_product_form.img_url(
+                            class="form-control",
+                            type='url',
+                            value=default_img_url
+                        ) }}
+                    </div>
+                    <div class="form-group">
+                        {{ create_product_form.category.label }}
+                        {{ create_product_form.category(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ create_product_form.description.label }}
+                        {{ create_product_form.description(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ create_product_form.is_on_sale.label }}
+                        {{ create_product_form.is_on_sale(checked=True) }}
+                    </div>
+                    <div class="form-group">
+                        {{ create_product_form.submit(class='btn btn-primary') }}
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- card end -->
+    </div>
+</section>
+{% endblock %}

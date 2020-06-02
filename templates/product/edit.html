@@ -1,0 +1,76 @@
+{% extends 'shared/layout.html' %}
+{% block body %}
+<header class="jumbotron">
+    <div class="container">
+        <h1>更新商品</h1>
+    </div>
+</header>
+<section>
+    <div class="container py-5">
+        <h2>填寫下方的表單更新商品</h2>
+        <!-- card -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h4 class="m-0">更新商品</h4>
+            </div>
+            <div class="card-body">
+                <!-- TODO: 
+                    顯示更新表單 
+                    並使用Bootstrap 4 表單元件
+                    https://getbootstrap.com/docs/4.4/components/forms/
+                -->
+                <!-- Flask產生的表單一定要放在form標籤裡 -->
+                <form method="POST">
+                    <!-- form若沒有csrf_token是無法傳遞資料給後端(app.py) -->
+                    {{ edit_form.hidden_tag() }}
+                    <div class="form-group">
+                        {{ edit_form.title.label }}
+                        <!-- 要給class屬性 要用()表示 -->
+                        {{ edit_form.title(value=product.title, class='form-control') }}
+                    </div>
+                    <div class="form-group">
+                        {{ edit_form.price.label }}
+                        {{ edit_form.price(value=product.price, class='form-control', type='number') }}
+                    </div>
+                    <div class="form-group">
+                        {{ edit_form.img_url.label }}
+                        {{ edit_form.img_url(value=product.img_url, class='form-control') }}
+                    </div>
+                    <div class="form-group">
+                        {{ edit_form.category.label }}
+                        <!-- 不支援select 和 check 可以填value -->
+                        {{ edit_form.category(value=product.category, class='form-control') }}
+                    </div>
+                    <div class="form-group">
+                        {{ edit_form.description.label }}
+                        {{ edit_form.description(value=product.description, class='form-control') }}
+                    </div>
+                    <div class="form-group">
+                        {{ edit_form.is_on_sale.label }}
+                        {{ edit_form.is_on_sale(value=product.is_on_sale) }}
+                    </div>
+                    <div class="form-group">
+                        {{ edit_form.submit(class='btn btn-warning') }}
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- card end -->
+        <div class="card mt-3">
+            <div class="card-header">刪除商品</div>
+            <form method="POST" class="card-body">
+                <!-- 和app.py做溝通 -->
+                {{ delete_form.hidden_tag() }}
+                <div class="form-group">
+                    {{ delete_form.confirm.label }}
+                    {{ delete_form.confirm }}
+                </div>
+                <div class="form-group">
+                    {{ delete_form.submit(class='btn btn-danger') }}
+                </div>
+            </form>
+
+        </div>
+    </div>
+</section>
+{% endblock %}
